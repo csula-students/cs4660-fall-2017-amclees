@@ -99,9 +99,6 @@ class AdjacencyList(object):
         for edge in self.adjacency_list[node_1]:
             if edge.to_node == node_2:
                 return True
-        for edge in self.adjacency_list[node_2]:
-            if edge.to_node == node_1:
-                return True
         return False
 
     def neighbors(self, node):
