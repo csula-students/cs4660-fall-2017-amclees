@@ -153,26 +153,61 @@ class AdjacencyMatrix(object):
         self.nodes = []
 
     def adjacent(self, node_1, node_2):
-        pass
+        if node_1 not in self.nodes or node_2 not in self.nodes:
+            return False
+        if self.adjacency_matrix[self.__get_node_index(node_1)][self.__get_node_index(node_2)] is None:
+            return False
+        else:
+            return True
 
     def neighbors(self, node):
-        pass
+        if node not in self.nodes:
+            return []
+        return [Node(neighbor_number)
+                for neighbor_number
+                in range(0, len(self.adjacency_matrix[self.__get_node_index(node)]))
+                if self.adjacency_matrix[self.__get_node_index(node)][neighbor_number] is not None]
 
     def add_node(self, node):
-        pass
+        if node in self.nodes:
+            return False
+        self.nodes.append(node)
+        for row in self.adjacency_matrix:
+            row.append(None)
+        self.adjacency_matrix.append([None] * len(self.nodes))
+        return True
 
     def remove_node(self, node):
-        pass
+        if node not in self.nodes:
+            return False
+        node_index = self.__get_node_index(node)
+        self.nodes.remove(node)
+        del self.adjacency_matrix[node_index]
+        for row in self.adjacency_matrix:
+            del row[node_index]
+        return True
 
     def add_edge(self, edge):
-        pass
+        if edge.from_node not in self.nodes or edge.to_node not in self.nodes:
+            return False
+        if self.adjacency_matrix[self.__get_node_index(edge.from_node)][self.__get_node_index(edge.to_node)] is None:
+            self.adjacency_matrix[self.__get_node_index(edge.from_node)][self.__get_node_index(edge.to_node)] = edge.weight
+            return True
+        else:
+            return False
 
     def remove_edge(self, edge):
-        pass
+        if edge.from_node not in self.nodes or edge.to_node not in self.nodes:
+            return False
+        if self.adjacency_matrix[self.__get_node_index(edge.from_node)][self.__get_node_index(edge.to_node)] is None:
+            return False
+        else:
+            self.adjacency_matrix[self.__get_node_index(edge.from_node)][self.__get_node_index(edge.to_node)] = None
+            return True
 
     def __get_node_index(self, node):
         """helper method to find node index"""
-        pass
+        return self.nodes.index(node)
 
 class ObjectOriented(object):
     """ObjectOriented defines the edges and nodes as both list"""
