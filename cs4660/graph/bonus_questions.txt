@@ -1,0 +1,31 @@
+1.
+Let V be the number of nodes
+Let E be the number of edges
+
+Construct graph from file O(V + E * lg(V))
+==========================================
+
+Reading the node count takes O(1) since it is always one line.
+
+Reading the edges from the file take O(E * lg(V)) since there are E lines that
+increase based on the digits used to represent the node numbers.
+
+Adding V nodes to the graph takes O(V) time since creating of a linked list
+and added an entry to a dictionary both take O(1).
+
+Adding E edges to the graph takes O(E * lg(V)) time because splitting and parsing
+numbers each take O(lg(V)) time (length of each line increases with the digits used
+to represent V, digits increase O(lg(V))).
+
+Adjacency list
+==============
+
+Adjacency matrix
+================
+
+Object oriented
+===============
+
+2.
+3.
+4.
