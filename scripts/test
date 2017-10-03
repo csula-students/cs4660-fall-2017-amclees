@@ -1,0 +1,23 @@
+#!/bin/bash
+# This script runs units tests with Python
+# Usage: test <python test specifier> <3 to run "python 3">
+# Example: test test.test_graph.TestAdjacencyMatrix 3
+# Author: amclees
+
+cd $( dirname $0 ) && cd ..
+cd cs4660
+
+if [[ -z "${*// }" ]]; then
+    python -m unittest discover
+else
+    MODE=$1
+    if [ "$MODE" == "-" ]; then
+        MODE="discover"
+    fi
+
+    if [ -z "$2" ]; then
+        python -m unittest $MODE
+    else
+        python3 -m unittest $MODE
+    fi
+fi

@@ -46,6 +46,8 @@ def construct_graph_from_file(graph, file_path):
         split_line = line.split(':')
         graph.add_edge(Edge(Node(int(split_line[0])), Node(int(split_line[1])), int(split_line[2])))
 
+    file_obj.close()
+
     return graph
 
 class Node(object):
