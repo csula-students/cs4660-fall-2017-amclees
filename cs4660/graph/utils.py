@@ -24,7 +24,7 @@ class Tile(object):
         return not self.__eq__(other)
 
     def __hash__(self):
-        return hash(self.x + self.y + self.symbol)
+        return hash(str(self.x) + "," + str(self.y) + self.symbol)
 
 
 
