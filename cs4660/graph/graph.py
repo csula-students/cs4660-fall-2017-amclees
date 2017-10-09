@@ -169,7 +169,7 @@ class AdjacencyMatrix(object):
     def neighbors(self, node):
         if node not in self.nodes:
             return []
-        return [Node(neighbor_number)
+        return [self.nodes[neighbor_number]
                 for neighbor_number
                 in range(0, len(self.adjacency_matrix[self.__get_node_index(node)]))
                 if self.adjacency_matrix[self.__get_node_index(node)][neighbor_number] is not None]

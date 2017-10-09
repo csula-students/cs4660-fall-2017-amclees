@@ -81,7 +81,9 @@ def queue_search(graph, initial_node, dest_node, visit_queue, dijkstra=False):
     return list(reversed(path))
 
 def dist(from_node, to_node):
-    return abs(from_node.data.x - to_node.data.x) + abs(from_node.data.y - to_node.data.y)
+    x_dist = abs(from_node.data.x - to_node.data.x)  
+    y_dist = abs(from_node.data.y - to_node.data.y)
+    return ((x_dist ** 2) + (y_dist ** 2)) ** 0.5
 
 def a_star_search(graph, initial_node, dest_node):
     """
@@ -107,13 +109,18 @@ def a_star_search(graph, initial_node, dest_node):
         if current in explored:
             continue
         if current == dest_node:
-            # Make the path
-            print('Found the path in A*')
+            path = []
+            current_node = dest_node
+            while current_node != initial_node:
+                next_node = parents[current_node]
+                path = [g.Edge(next_node, current_node, graph.distance(next_node, current_node))] + path
+                current_node = next_node
+            return path
         explored[current] = True
         for neighbor in graph.neighbors(current):
             if neighbor in explored:
                 continue
-            possible_score = g_score[current] if current in g_score else sys.maxsize
+            possible_score = graph.distance(current, neighbor) + g_score[current] if current in g_score else sys.maxsize
 
             parents[neighbor] = current
             g_score[neighbor] = possible_score

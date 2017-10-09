@@ -93,14 +93,14 @@ def convert_edge_to_grid_actions(edges):
 
     actions = []
     for edge in edges:
-        if edge.from_node.x > edge.to_node.x:
-            actions.append('S')
-        elif edge.from_node.x < edge.to_node.x:
-            actions.append('N')
-        elif edge.from_node.y > edge.to_node.y:
-            actions.append('E')
-        else:
+        if edge.from_node.data.x > edge.to_node.data.x:
             actions.append('W')
+        elif edge.from_node.data.x < edge.to_node.data.x:
+            actions.append('E')
+        elif edge.from_node.data.y > edge.to_node.data.y:
+            actions.append('N')
+        else:
+            actions.append('S')
 
     return ''.join(actions)
 
