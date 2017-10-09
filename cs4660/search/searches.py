@@ -2,7 +2,11 @@
 Searches module defines all different search algorithms
 """
 
-import Queue
+try:
+    import Queue as queue
+except ImportError:
+    import queue
+
 import sys
 
 from graph import graph as g
@@ -13,7 +17,7 @@ def bfs(graph, initial_node, dest_node):
     uses graph to do search from the initial_node to dest_node
     returns a list of actions going from the initial node to dest_node
     """
-    return queue_search(graph, initial_node, dest_node, Queue.Queue())
+    return queue_search(graph, initial_node, dest_node, queue.Queue())
 
 def dfs(graph, initial_node, dest_node):
     """
@@ -47,7 +51,7 @@ def dijkstra_search(graph, initial_node, dest_node):
     uses graph to do search from the initial_node to dest_node
     returns a list of actions going from the initial node to dest_node
     """
-    return queue_search(graph, initial_node, dest_node, Queue.PriorityQueue(), True)
+    return queue_search(graph, initial_node, dest_node, queue.PriorityQueue(), True)
 
 def queue_search(graph, initial_node, dest_node, visit_queue, dijkstra=False):
     distances = {}
@@ -91,7 +95,7 @@ def a_star_search(graph, initial_node, dest_node):
     uses graph to do search from the initial_node to dest_node
     returns a list of actions going from the initial node to dest_node
     """
-    to_explore = Queue.PriorityQueue()
+    to_explore = queue.PriorityQueue()
     explored = {}
     parents = {}
 

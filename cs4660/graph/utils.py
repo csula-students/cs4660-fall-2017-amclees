@@ -4,7 +4,7 @@ utils package is for some quick utility methods
 such as parsing
 """
 
-import graph as g
+from . import graph as g
 
 class Tile(object):
     """Node represents basic unit of graph"""
@@ -43,6 +43,8 @@ def parse_grid_file(graph, file_path):
             continue
         non_borders = line[1:-2]
         rows.append([non_borders[i:i+2] for i in range(0, len(non_borders), 2)])
+
+    file_obj.close()
 
     nodes = []
     edges = []
