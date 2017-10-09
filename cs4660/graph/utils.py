@@ -28,21 +28,6 @@ class Tile(object):
     def __hash__(self):
         return hash(str(self.x) + "," + str(self.y) + self.symbol)
 
-def block_at_position(lines, x, y):
-    if y >= len(lines) - 1 or x >= len(lines[0]) - 1 or x <= 1 or y <= 1:
-        return '--'
-    return lines[y][x] + lines[y][x + 1]
-
-def edges_at_position(lines, x, y, tag):
-    positions = [(x, y + 1), (x, y - 1), (x + 1, y), (x - 1, y)]
-    edges = []
-    for position in positions:
-        block = block_at_position(lines, position[0], position[1])
-        if block == '--':
-            continue
-        edges.append(g.Edge(g.Node(Tile(x, y, tag)), g.Node(Tile(position[0], position[1], block)), 1))
-    return edges
-
 def parse_grid_file(graph, file_path):
     """
     ParseGridFile parses the grid file implementation from the file path line
@@ -51,29 +36,49 @@ def parse_grid_file(graph, file_path):
     Returns graph object
     """
     file_obj = open(file_path)
-    lines = []
-    for line in file_obj:
-        lines.append(line)
 
-    tiles = []
-    edges = []
-    y = 0
-    for line in lines:
+    rows = []
+    for line in file_obj:
         if line[0] == '+':
             continue
-        x = 1
-        while x < len(line):
-            block = line[x] + line[x + 1]
-            if block == '  ' or block[0] == '@':
-                tiles.append(g.Node(Tile(x, y, block)))
-                edges += edges_at_position(lines, x, y, block)
-            x += 2
+        non_borders = line[1:-2]
+        rows.append([non_borders[i:i+2] for i in range(0, len(non_borders), 2)])
+
+    nodes = []
+    edges = []
+
+    # y is the row index
+    y = 0
+    for row in rows:
+        # x is the column index
+        x = 0
+        for block in row:
+            if block == '##':
+                x += 1
+                continue
+            here_node = g.Node(Tile(x, y, block))
+            nodes.append(here_node)
+
+            adjacents = [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
+            for adjacent in adjacents:
+                if adjacent[0] >= len(rows[0]) or adjacent[0] < 0 or adjacent[1] >= len(rows) or adjacent[1] < 0:
+                    continue
+                dest_block = rows[adjacent[1]][adjacent[0]]
+                if dest_block == '##':
+                    continue
+                to_node = g.Node(Tile(adjacent[0], adjacent[1], dest_block))
+                edges.append(g.Edge(here_node, to_node, 1))
+            x += 1
         y += 1
 
-    for tile in tiles:
-        graph.add_node(tile)
+    for node in nodes:
+        status = graph.add_node(node)
+        if not status:
+            print('Failure adding grid node ' + str(node))
     for edge in edges:
-        graph.add_edge(edge)
+        status = graph.add_edge(edge)
+        if not status:
+            print('Failure adding grid edge  ' + str(edge))
 
     return graph
 

@@ -3,6 +3,7 @@ Searches module defines all different search algorithms
 """
 
 import Queue
+import sys
 
 from graph import graph as g
 
@@ -79,10 +80,45 @@ def queue_search(graph, initial_node, dest_node, visit_queue, dijkstra=False):
 
     return list(reversed(path))
 
+def dist(from_node, to_node):
+    return abs(from_node.data.x - to_node.data.x) + abs(from_node.data.y - to_node.data.y)
+
 def a_star_search(graph, initial_node, dest_node):
     """
     A* Search
     uses graph to do search from the initial_node to dest_node
     returns a list of actions going from the initial node to dest_node
     """
-    pass
+    to_explore = Queue.PriorityQueue()
+    explored = {}
+    parents = {}
+
+    to_explore.put((0, initial_node))
+
+    g_score = {
+        initial_node: 0
+    }
+    f_score = {
+        initial_node: dist(initial_node, dest_node)
+    }
+
+    while not to_explore.empty():
+        current = to_explore.get()[1]
+        if current in explored:
+            continue
+        if current == dest_node:
+            # Make the path
+            print('Found the path in A*')
+        explored[current] = True
+        for neighbor in graph.neighbors(current):
+            if neighbor in explored:
+                continue
+            possible_score = g_score[current] if current in g_score else sys.maxsize
+
+            parents[neighbor] = current
+            g_score[neighbor] = possible_score
+            f_score[neighbor] = g_score[neighbor] + dist(neighbor, dest_node)
+
+            to_explore.put((f_score[neighbor], neighbor))
+
+    return []
