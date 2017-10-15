@@ -106,12 +106,14 @@ def dijkstra_search(initial_node, dest_node):
 
 def queue_search(initial_node, dest_node, visit_queue, dijkstra=False):
     distances = {}
+    distance_paths = {}
     parents = {}
 
     path = []
     path_trace_tile = None
 
     distances[initial_node] = 0
+    distance_paths[initial_node] = [initial_node]
     visit_queue.put((0, initial_node))
 
     while not visit_queue.empty():
@@ -123,13 +125,12 @@ def queue_search(initial_node, dest_node, visit_queue, dijkstra=False):
         current_state = get_state(current)
         for neighbor in current_state['neighbors']:
             adjacent = neighbor['id']
-            if dijkstra:
-                possible_distance = distances[current] + (-1 * transition_state(current, neighbor['id'])['event']['effect'])
-            if adjacent not in distances:
-                if not dijkstra:
-                    possible_distance = distances[current] + (-1 * transition_state(current, neighbor['id'])['event']['effect'])
+            possible_distance = distances[current] + (-1 * transition_state(current, neighbor['id'])['event']['effect'])
+            possible_distance_path = distance_paths[current] + [adjacent]
 
+            if adjacent not in distances or (dijkstra and possible_distance < distances[adjacent] and len(possible_distance_path) == len(set(possible_distance_path))):
                 distances[adjacent] = possible_distance
+                distance_paths[adjacent] = possible_distance_path
                 parents[adjacent] = current
                 if dest_node == adjacent:
                     path_trace_tile = adjacent
@@ -153,6 +154,11 @@ def print_path(path):
         hp += edge.weight
     print('Total hp: ' + str(hp))
 
+def print_animatable(path):
+    print(path[0].from_node.data)
+    for edge in path:
+        print(edge.to_node.data)
+
 if __name__ == "__main__":
     load_caches()
     empty_room = get_state('7f3dc077574c013d98b2de8f735058b4')
@@ -163,4 +169,8 @@ if __name__ == "__main__":
     print('\nDijkstra Path:')
     dijkstra_path = dijkstra_search(empty_room['id'], dark_room['id'])
     print_path(dijkstra_path)
+    print('\nAnimatable BFS Path:')
+    print_animatable(bfs_path)
+    print('\nAnimatable Dijkstra Path:')
+    print_animatable(dijkstra_path)
     save_caches()
